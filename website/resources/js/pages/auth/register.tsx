@@ -1,4 +1,4 @@
-import { Head, useForm } from '@inertiajs/react';
+import { useForm } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
 import { FormEventHandler } from 'react';
 
@@ -32,9 +32,8 @@ export default function Register() {
     };
 
     return (
-        <AuthLayout title="Create an account" description="Enter your details below to create your account">
-            <Head title="Register" />
-            <form className="flex flex-col gap-6" onSubmit={submit}>
+        <AuthLayout heading1="Create Your" heading2="Account!" imagePath="/book_in_hand.png">
+            <form className="bg-on-background flex w-85 flex-col gap-6 rounded-lg px-5 py-7 sm:w-96" onSubmit={submit}>
                 <div className="grid gap-6">
                     <div className="grid gap-2">
                         <Label htmlFor="name">Name</Label>
@@ -101,19 +100,18 @@ export default function Register() {
                         <InputError message={errors.password_confirmation} />
                     </div>
 
-                    <Button type="submit" className="mt-2 w-full" tabIndex={5} disabled={processing}>
+                    <Button type="submit" variant={'custom'} className="w-full hover:scale-105" tabIndex={5} disabled={processing}>
                         {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
                         Create account
                     </Button>
                 </div>
-
-                <div className="text-muted-foreground text-center text-sm">
-                    Already have an account?{' '}
-                    <TextLink href={route('login')} tabIndex={6}>
-                        Log in
-                    </TextLink>
-                </div>
             </form>
+            <div className="text-muted-foreground mt-4 text-end text-sm">
+                <p className="font-light">Already have an account? </p>
+                <TextLink href={route('login')} tabIndex={6}>
+                    Log in
+                </TextLink>
+            </div>
         </AuthLayout>
     );
 }
