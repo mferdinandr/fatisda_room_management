@@ -1,4 +1,4 @@
-import { Head, useForm } from '@inertiajs/react';
+import { useForm } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
 import { FormEventHandler } from 'react';
 
@@ -36,13 +36,11 @@ export default function Login({ status, canResetPassword }: LoginProps) {
     };
 
     return (
-        <AuthLayout title="Log in to your account" description="Enter your email and password below to log in">
-            <Head title="Log in" />
-
-            <form className="flex flex-col gap-6" onSubmit={submit}>
+        <AuthLayout heading1="Hallo," heading2="Welcome Back!" imagePath="/book_in_hand.png">
+            <form className="bg-on-background flex w-85 flex-col gap-6 rounded-lg px-5 py-3 sm:w-96" onSubmit={submit}>
                 <div className="grid gap-6">
                     <div className="grid gap-2">
-                        <Label htmlFor="email">Email address</Label>
+                        <Label htmlFor="email">Email</Label>
                         <Input
                             id="email"
                             type="email"
@@ -58,14 +56,6 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                     </div>
 
                     <div className="grid gap-2">
-                        <div className="flex items-center">
-                            <Label htmlFor="password">Password</Label>
-                            {canResetPassword && (
-                                <TextLink href={route('password.request')} className="ml-auto text-sm" tabIndex={5}>
-                                    Forgot password?
-                                </TextLink>
-                            )}
-                        </div>
                         <Input
                             id="password"
                             type="password"
@@ -90,19 +80,25 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                         <Label htmlFor="remember">Remember me</Label>
                     </div>
 
-                    <Button type="submit" className="mt-4 w-full" tabIndex={4} disabled={processing}>
+                    <Button type="submit" variant={'custom'} className="w-full hover:scale-105" tabIndex={4} disabled={processing}>
                         {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
                         Log in
                     </Button>
-                </div>
-
-                <div className="text-muted-foreground text-center text-sm">
-                    Don't have an account?{' '}
-                    <TextLink href={route('register')} tabIndex={5}>
-                        Sign up
-                    </TextLink>
+                    <div className="">
+                        {canResetPassword && (
+                            <TextLink href={route('password.request')} className="ml-auto text-sm" tabIndex={5}>
+                                Forgot password?
+                            </TextLink>
+                        )}
+                    </div>
                 </div>
             </form>
+            <div className="text-muted-foreground mt-4 text-end text-sm">
+                <p className="font-light">Don't have an account? </p>
+                <TextLink href={route('register')} tabIndex={5}>
+                    Sign up
+                </TextLink>
+            </div>
 
             {status && <div className="mb-4 text-center text-sm font-medium text-green-600">{status}</div>}
         </AuthLayout>
