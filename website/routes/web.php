@@ -14,6 +14,13 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
     })->name('dashboard');
 });
 
+Route::post('/logout', function () {
+    Auth::logout();
+    request()->session()->invalidate();
+    request()->session()->regenerateToken();
+
+})->name('logout');
+
 
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';
