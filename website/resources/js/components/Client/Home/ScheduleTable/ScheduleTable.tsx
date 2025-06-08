@@ -15,6 +15,13 @@ interface ScheduleItem {
 }
 
 export default function ScheduleTable({ isSidebarOpen }: ScheduleTableProps) {
+    const [isDetailOpen, setIsDetailOpen] = useState(false);
+    const [detailOpened, setDetailOpened] = useState({
+        course: '',
+        end: '',
+        room: '',
+        start: '',
+    });
     const rooms = ['Ruangan 1', 'Ruangan 2', 'Ruangan 3', 'Ruangan 4'];
     const times = ['09.00', '10.00', '11.00', '12.00', '13.00', '14.00', '15.00', '16.00', '17.00'];
 
@@ -64,9 +71,21 @@ export default function ScheduleTable({ isSidebarOpen }: ScheduleTableProps) {
         return headerHeight + totalTimeSlots * TIME_SLOT_HEIGHT;
     };
 
+    const handleOpenDetail = (scheduleItem) => {
+        setIsDetailOpen(!isDetailOpen);
+        setDetailOpened({
+            course: scheduleItem.course,
+            end: scheduleItem.end,
+            room: scheduleItem.room,
+            start: scheduleItem.start,
+        });
+        console.log(detailOpened);
+    };
+    console.log(isDetailOpen);
+
     return (
         <div
-            className={`mt-36 font-sans transition-all duration-300 ${isSidebarOpen ? 'ml-68' : 'ml-12'} overflow-hidden`}
+            className={`mt-28 font-sans transition-all duration-300 ${isSidebarOpen ? 'ml-66' : 'ml-12'} overflow-hidden`}
             style={{ minHeight: `${calculateMinHeight()}px` }}
         >
             <div className="font-black text-black">
@@ -95,25 +114,29 @@ export default function ScheduleTable({ isSidebarOpen }: ScheduleTableProps) {
                                 const scheduleItem = schedule.find((s) => s.room === room && s.start === time);
 
                                 return (
-                                    <div className="relative border-l-2" key={room + time} style={{ height: `${TIME_SLOT_HEIGHT}px` }}>
-                                        {scheduleItem && (
-                                            <div
-                                                className={`${scheduleItem.color} flex flex-col rounded-lg px-3 py-2 font-semibold text-white`}
-                                                style={{
-                                                    height: `${getDuration(scheduleItem.start, scheduleItem.end) * TIME_SLOT_HEIGHT + 8}px`,
-                                                    position: 'absolute',
-                                                    top: '1px',
-                                                    left: '4px',
-                                                    right: '4px',
-                                                }}
-                                            >
-                                                <p className="text-sm font-bold">{scheduleItem.course}</p>
-                                                <p className="text-xs opacity-90">
-                                                    {scheduleItem.start} - {scheduleItem.end}
-                                                </p>
-                                            </div>
-                                        )}
-                                    </div>
+                                    <>
+                                        <div className="relative border-l-2" key={room + time} style={{ height: `${TIME_SLOT_HEIGHT}px` }}>
+                                            {scheduleItem && (
+                                                <div
+                                                    className={`${scheduleItem.color} flex cursor-pointer flex-col rounded-lg px-3 py-2 font-semibold text-white`}
+                                                    style={{
+                                                        height: `${getDuration(scheduleItem.start, scheduleItem.end) * TIME_SLOT_HEIGHT + 8}px`,
+                                                        position: 'absolute',
+                                                        top: '1px',
+                                                        left: '4px',
+                                                        right: '4px',
+                                                    }}
+                                                    onClick={() => handleOpenDetail(scheduleItem)}
+                                                >
+                                                    <p className="text-sm font-bold">{scheduleItem.course}</p>
+                                                    <p className="text-xs opacity-90">
+                                                        {scheduleItem.start} - {scheduleItem.end}
+                                                    </p>
+                                                </div>
+                                            )}
+                                        </div>
+                                        {isDetailOpen && <div className="absolute">{detailOpened.room}</div>}
+                                    </>
                                 );
                             })}
                         </React.Fragment>
