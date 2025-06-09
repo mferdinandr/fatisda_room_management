@@ -47,19 +47,18 @@ class User extends Authenticatable
         ];
     }
 
-    /**
-     * Relationship: User has many bookings
-     */
-    public function bookings()
-    {
-        return $this->hasMany(Booking::class);
-    }
-
-    /**
-     * Check if user is admin
-     */
     public function isAdmin()
     {
         return $this->role === 'admin';
+    }
+
+    public function isUser()
+    {
+        return !$this->isAdmin();
+    }
+
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
     }
 }
