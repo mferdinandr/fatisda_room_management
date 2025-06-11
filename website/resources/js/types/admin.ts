@@ -64,3 +64,26 @@ export interface TimeSlotFormData {
     end_time: string;
     is_active: boolean;
 }
+
+export interface ScheduleSlot {
+    room_id: number;
+    time_slot_id: number;
+    is_booked: boolean;
+    booking?: Booking;
+    is_available: boolean;
+}
+
+export interface ScheduleRow {
+    time_slot: TimeSlot;
+    slots: ScheduleSlot[];
+}
+
+export interface BookingFormData {
+    room_id: number;
+    time_slot_id: number;
+    booking_date: string;
+    keperluan: 'kelas' | 'rapat' | 'lainnya';
+    mata_kuliah?: string;
+    dosen?: string;
+    catatan?: string;
+}

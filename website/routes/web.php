@@ -6,13 +6,87 @@ use App\Models\TimeSlot;
 use App\Models\Booking;
 use App\Http\Controllers\Admin\RoomController;
 use App\Http\Controllers\Admin\TimeSlotController;
+use App\Http\Controllers\ScheduleController; 
+use App\Http\Controllers\BookingController;
+use Illuminate\Http\Request; 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
-Route::get('/', function () {
-    return Inertia::render('Home/index');
+Route::get('/', function (Request $request) {
+    $date = $request->get('date', now()->format('Y-m-d'));
+    
+    // Validate date format
+    try {
+        $selectedDate = \Carbon\Carbon::createFromFormat('Y-m-d', $date);
+    } catch (\Exception $e) {
+        $selectedDate = now();
+        $date = $selectedDate->format('Y-m-d');
+    }
+
+    // Get active rooms and time slots
+    $rooms = Room::active()->orderBy('name')->get();
+    $timeSlots = TimeSlot::active()->ordered()->get();
+    
+    // Get approved bookings for the selected date
+    $bookings = Booking::with(['user', 'room', 'timeSlot'])
+        ->approved()
+        ->forDate($date)
+        ->get();
+
+    // Create schedule matrix
+    $schedule = [];
+    foreach ($timeSlots as $timeSlot) {
+        $row = [
+            'time_slot' => $timeSlot,
+            'slots' => []
+        ];
+        
+        foreach ($rooms as $room) {
+            // Find booking for this time slot and room
+            $booking = $bookings->first(function ($booking) use ($room, $timeSlot) {
+                return $booking->room_id === $room->id && 
+                       $booking->time_slot_id === $timeSlot->id;
+            });
+            
+            $row['slots'][] = [
+                'room_id' => $room->id,
+                'time_slot_id' => $timeSlot->id,
+                'is_booked' => $booking !== null,
+                'booking' => $booking,
+                'is_available' => $booking === null && $room->is_active && $timeSlot->is_active,
+            ];
+        }
+        
+        $schedule[] = $row;
+    }
+
+    return Inertia::render('Home/index', [
+        'date' => $date,
+        'selectedDate' => $selectedDate->format('l, F j, Y'),
+        'rooms' => $rooms,
+        'timeSlots' => $timeSlots,
+        'bookings' => $bookings,
+        'schedule' => $schedule,
+        'canGoToPrevious' => $selectedDate->isAfter(now()->startOfDay()),
+    ]);
 })->name('home');
+
+// Public Schedule Routes 
+Route::get('/schedule', [ScheduleController::class, 'index'])->name('schedule.index');
+Route::get('/api/schedule', [ScheduleController::class, 'getSchedule'])->name('api.schedule');
+Route::get('/api/availability', [ScheduleController::class, 'checkAvailability'])->name('api.availability');
+
+// Booking Routes (requires auth) 
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/booking/create', [BookingController::class, 'create'])->name('bookings.create');
+    Route::post('/booking', [BookingController::class, 'store'])->name('bookings.store');
+    Route::get('/my-bookings', [BookingController::class, 'myBookings'])->name('bookings.my-bookings');
+    Route::get('/my-bookings/{booking}', [BookingController::class, 'show'])->name('bookings.show');
+    Route::get('/my-bookings/{booking}/edit', [BookingController::class, 'edit'])->name('bookings.edit');
+    Route::put('/my-bookings/{booking}', [BookingController::class, 'update'])->name('bookings.update');
+    Route::delete('/my-bookings/{booking}', [BookingController::class, 'destroy'])->name('bookings.destroy');
+});
 
 // Admin routes 
 Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {

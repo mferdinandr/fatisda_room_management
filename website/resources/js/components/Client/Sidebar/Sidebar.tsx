@@ -1,17 +1,54 @@
 import { Calendar } from '@/components/ui/calendar';
+import { router } from '@inertiajs/react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useState } from 'react';
 
 interface ISidebarProps {
     isOpen: boolean;
     setIsOpen: (value: boolean) => void;
+    selectedDate: string; // YYYY-MM-DD format
+    canGoToPrevious?: boolean;
 }
 
-const Sidebar = ({ isOpen, setIsOpen }: ISidebarProps) => {
-    const [date, setDate] = useState<Date | undefined>(new Date());
+const Sidebar = ({ isOpen, setIsOpen, selectedDate, canGoToPrevious = true }: ISidebarProps) => {
+    const [date, setDate] = useState<Date | undefined>(new Date(selectedDate));
 
     const toggleSidebar = () => {
         setIsOpen(!isOpen);
+    };
+
+    const handleDateSelect = (newDate: Date | undefined) => {
+        if (!newDate) return;
+
+        // Check if it's a past date and if we can't go to previous
+        const today = new Date();
+        const isPastDate = newDate < today && newDate.toDateString() !== today.toDateString();
+
+        if (isPastDate && !canGoToPrevious) {
+            return;
+        }
+
+        setDate(newDate);
+
+        // Format date for URL
+        const formattedDate = newDate.toISOString().split('T')[0];
+
+        // Navigate to new date
+        router.get(
+            '/',
+            { date: formattedDate },
+            {
+                preserveState: true,
+                preserveScroll: true,
+            },
+        );
+    };
+
+    const isDateDisabled = (date: Date) => {
+        if (canGoToPrevious) return false;
+
+        const today = new Date();
+        return date < today && date.toDateString() !== today.toDateString();
     };
 
     return (
@@ -39,7 +76,7 @@ const Sidebar = ({ isOpen, setIsOpen }: ISidebarProps) => {
                             day: 'numeric',
                         })}
                     </h3>
-                    <Calendar mode="single" selected={date} onSelect={setDate} className="" />
+                    <Calendar mode="single" selected={date} onSelect={handleDateSelect} disabled={isDateDisabled} className="" />
                 </>
             )}
         </div>
