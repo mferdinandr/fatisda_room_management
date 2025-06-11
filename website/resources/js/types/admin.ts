@@ -58,3 +58,9 @@ export interface StatsCardProps {
     icon: React.ReactNode;
     className?: string;
 }
+
+export interface TimeSlotFormData {
+    start_time: string;
+    end_time: string;
+    is_active: boolean;
+}

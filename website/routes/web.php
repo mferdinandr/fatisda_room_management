@@ -5,6 +5,7 @@ use App\Models\Room;
 use App\Models\TimeSlot;
 use App\Models\Booking;
 use App\Http\Controllers\Admin\RoomController;
+use App\Http\Controllers\Admin\TimeSlotController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -38,6 +39,15 @@ Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->name('ad
     Route::get('/rooms/{room}/edit', [RoomController::class, 'edit'])->name('rooms.edit');
     Route::put('/rooms/{room}', [RoomController::class, 'update'])->name('rooms.update');
     Route::delete('/rooms/{room}', [RoomController::class, 'destroy'])->name('rooms.destroy');
+
+     // Time Slot Management Routes - TAMBAH INI
+    Route::get('/time-slots', [TimeSlotController::class, 'index'])->name('time-slots.index');
+    Route::get('/time-slots/create', [TimeSlotController::class, 'create'])->name('time-slots.create');
+    Route::post('/time-slots', [TimeSlotController::class, 'store'])->name('time-slots.store');
+    Route::get('/time-slots/{timeSlot}', [TimeSlotController::class, 'show'])->name('time-slots.show');
+    Route::get('/time-slots/{timeSlot}/edit', [TimeSlotController::class, 'edit'])->name('time-slots.edit');
+    Route::put('/time-slots/{timeSlot}', [TimeSlotController::class, 'update'])->name('time-slots.update');
+    Route::delete('/time-slots/{timeSlot}', [TimeSlotController::class, 'destroy'])->name('time-slots.destroy');
 });
 
 // User dashboard 

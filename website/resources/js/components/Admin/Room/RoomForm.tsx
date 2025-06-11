@@ -108,7 +108,7 @@ export default function RoomForm({ room, isEditing = false, onCancel }: RoomForm
 
                     {/* Form Actions */}
                     <div className="flex flex-col gap-4 pt-6 sm:flex-row">
-                        <Button type="submit" disabled={processing} className="flex-1 sm:flex-none">
+                        <Button type="submit" disabled={processing} className="flex-1 sm:flex-none" variant={`secondary`}>
                             {processing ? (
                                 <>
                                     <div className="border-background mr-2 h-4 w-4 animate-spin rounded-full border-2 border-t-transparent" />
@@ -122,7 +122,7 @@ export default function RoomForm({ room, isEditing = false, onCancel }: RoomForm
                             )}
                         </Button>
 
-                        <Button type="button" variant="outline" onClick={onCancel} disabled={processing} className="flex-1 sm:flex-none">
+                        <Button type="button" variant="destructive" onClick={onCancel} disabled={processing} className="flex-1 sm:flex-none">
                             <ArrowLeft className="mr-2 h-4 w-4" />
                             Cancel
                         </Button>

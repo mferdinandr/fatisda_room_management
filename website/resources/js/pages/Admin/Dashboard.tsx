@@ -56,17 +56,18 @@ export default function AdminDashboard({ stats }: Props) {
                     </CardHeader>
                     <CardContent>
                         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-                            <Button asChild variant="secondary" className="h-24 flex-col space-y-2">
+                            <Button asChild variant="outline" className="h-24 flex-col space-y-2">
                                 <Link href="/admin/rooms/create">
                                     <Plus className="h-8 w-8" />
                                     <span>Add New Room</span>
                                 </Link>
                             </Button>
 
-                            <Button variant="outline" className="h-24 cursor-not-allowed flex-col space-y-2 opacity-50" disabled>
-                                <Clock className="h-8 w-8" />
-                                <span>Add Time Slot</span>
-                                <span className="text-xs">Coming Soon</span>
+                            <Button asChild variant="outline" className="h-24 flex-col space-y-2">
+                                <Link href="/admin/time-slots/create">
+                                    <Clock className="h-8 w-8" />
+                                    <span>Add Time Slot</span>
+                                </Link>
                             </Button>
 
                             <Button variant="outline" className="h-24 cursor-not-allowed flex-col space-y-2 opacity-50" disabled>
