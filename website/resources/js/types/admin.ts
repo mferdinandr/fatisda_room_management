@@ -87,3 +87,20 @@ export interface BookingFormData {
     dosen?: string;
     catatan?: string;
 }
+
+export interface PaginatedBookings {
+    data: Booking[];
+    links?: {
+        url: string | null;
+        label: string;
+        active: boolean;
+    }[];
+    meta?: {
+        current_page: number;
+        from: number | null;
+        last_page: number;
+        per_page: number;
+        to: number | null;
+        total: number;
+    };
+}

@@ -1,5 +1,3 @@
-// resources/js/Pages/Admin/Dashboard.tsx
-
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Link } from '@inertiajs/react';
@@ -7,6 +5,7 @@ import { Building2, Calendar, CheckCircle, Clock, Plus, Users } from 'lucide-rea
 
 import AdminLayout from '@/components/Admin/Layout/AdminLayout';
 import StatsCard from '@/components/Admin/Shared/StatsCard';
+import { Badge } from '@/components/ui/badge';
 import type { AdminStats } from '@/types/admin';
 
 interface Props {
@@ -70,10 +69,16 @@ export default function AdminDashboard({ stats }: Props) {
                                 </Link>
                             </Button>
 
-                            <Button variant="outline" className="h-24 cursor-not-allowed flex-col space-y-2 opacity-50" disabled>
-                                <Calendar className="h-8 w-8" />
-                                <span>View Bookings</span>
-                                <span className="text-xs">Coming Soon</span>
+                            <Button asChild variant="outline" className="h-24 flex-col space-y-2">
+                                <Link href="/admin/bookings">
+                                    <Calendar className="h-8 w-8" />
+                                    <span>Manage Bookings</span>
+                                    {stats.pending_bookings > 0 && (
+                                        <Badge variant="destructive" className="text-xs">
+                                            {stats.pending_bookings} pending
+                                        </Badge>
+                                    )}
+                                </Link>
                             </Button>
                         </div>
                     </CardContent>

@@ -11,6 +11,7 @@ use App\Http\Controllers\BookingController;
 use Illuminate\Http\Request; 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 use Inertia\Inertia;
 
 Route::get('/', function (Request $request) {
@@ -122,6 +123,16 @@ Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->name('ad
     Route::get('/time-slots/{timeSlot}/edit', [TimeSlotController::class, 'edit'])->name('time-slots.edit');
     Route::put('/time-slots/{timeSlot}', [TimeSlotController::class, 'update'])->name('time-slots.update');
     Route::delete('/time-slots/{timeSlot}', [TimeSlotController::class, 'destroy'])->name('time-slots.destroy');
+
+    // Booking Management Routes
+    Route::get('/bookings', [\App\Http\Controllers\Admin\BookingController::class, 'index'])->name('bookings.index');
+    Route::get('/bookings/{booking}', [\App\Http\Controllers\Admin\BookingController::class, 'show'])->name('bookings.show');
+    Route::post('/bookings/{booking}/approve', [\App\Http\Controllers\Admin\BookingController::class, 'approve'])->name('bookings.approve');
+    Route::post('/bookings/{booking}/reject', [\App\Http\Controllers\Admin\BookingController::class, 'reject'])->name('bookings.reject');
+    Route::post('/bookings/bulk-approve', [\App\Http\Controllers\Admin\BookingController::class, 'bulkApprove'])->name('bookings.bulk-approve');
+    Route::post('/bookings/bulk-reject', [\App\Http\Controllers\Admin\BookingController::class, 'bulkReject'])->name('bookings.bulk-reject');
+    Route::delete('/bookings/{booking}', [\App\Http\Controllers\Admin\BookingController::class, 'destroy'])->name('bookings.destroy');
+    Route::get('/bookings/export', [\App\Http\Controllers\Admin\BookingController::class, 'export'])->name('bookings.export');
 });
 
 // User dashboard 

@@ -1,5 +1,3 @@
-// resources/js/Components/Admin/Layout/AdminSidebar.tsx
-
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Link } from '@inertiajs/react';
@@ -39,11 +37,10 @@ export default function AdminSidebar({ currentRoute }: AdminSidebarProps) {
             isActive: currentRoute?.startsWith('admin.time-slots'),
         },
         {
-            href: '#',
+            href: '/admin/bookings',
             label: 'Bookings',
             icon: <Calendar className="mr-2 h-4 w-4" />,
-            isDisabled: true,
-            badge: 'Soon',
+            isActive: currentRoute?.startsWith('admin.bookings'),
         },
     ];
 
