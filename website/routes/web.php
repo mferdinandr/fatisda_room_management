@@ -14,18 +14,6 @@ use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Inertia\Inertia;
 
-Route::prefix('v1')->group(function () {
-    
-    // Authentication routes (Public - tidak perlu auth)
-    Route::post('/register', [AuthController::class, 'register'])->name('api.register');
-    Route::post('/login', [AuthController::class, 'login'])->name('api.login');
-    
-    // Protected routes (require authentication)
-    Route::middleware('auth:sanctum')->group(function () {
-        Route::post('/logout', [AuthController::class, 'logout'])->name('api.logout');
-        Route::get('/me', [AuthController::class, 'me'])->name('api.me');
-    });
-});
 
 Route::get('/', function (Request $request) {
     $date = $request->get('date', now()->format('Y-m-d'));
@@ -128,7 +116,7 @@ Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->name('ad
     Route::put('/rooms/{room}', [RoomController::class, 'update'])->name('rooms.update');
     Route::delete('/rooms/{room}', [RoomController::class, 'destroy'])->name('rooms.destroy');
 
-     // Time Slot Management Routes - TAMBAH INI
+     // Time Slot Management Routes 
     Route::get('/time-slots', [TimeSlotController::class, 'index'])->name('time-slots.index');
     Route::get('/time-slots/create', [TimeSlotController::class, 'create'])->name('time-slots.create');
     Route::post('/time-slots', [TimeSlotController::class, 'store'])->name('time-slots.store');

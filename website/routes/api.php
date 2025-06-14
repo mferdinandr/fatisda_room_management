@@ -167,6 +167,25 @@ Route::prefix('v1')->group(function () {
             }
         });
     });
+
+    // Room Management Routes
+    Route::get('rooms-public', [App\Http\Controllers\Api\V1\RoomController::class, 'index']);
+    Route::get('rooms-public/{room}', [App\Http\Controllers\Api\V1\RoomController::class, 'show']);
+    Route::get('rooms-public/{room}/availability', [App\Http\Controllers\Api\V1\RoomController::class, 'availability'])->name('rooms.public.availability');
+
+    Route::middleware('auth:sanctum')->group(function () {
+        
+        
+        // Admin routes for rooms
+        Route::middleware('admin')->group(function () {
+            Route::get('rooms', [App\Http\Controllers\Api\V1\RoomController::class, 'index']);
+            Route::post('rooms', [App\Http\Controllers\Api\V1\RoomController::class, 'store']);
+            Route::get('rooms/{room}', [App\Http\Controllers\Api\V1\RoomController::class, 'show']);
+            Route::put('rooms/{room}', [App\Http\Controllers\Api\V1\RoomController::class, 'update']);
+            Route::delete('rooms/{room}', [App\Http\Controllers\Api\V1\RoomController::class, 'destroy']);
+            Route::get('rooms/{room}/availability', [App\Http\Controllers\Api\V1\RoomController::class, 'availability'])->name('rooms.availability');
+        });
+    });
 });
 
 // Routes lama (tetap ada)
