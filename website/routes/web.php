@@ -14,6 +14,19 @@ use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Inertia\Inertia;
 
+Route::prefix('v1')->group(function () {
+    
+    // Authentication routes (Public - tidak perlu auth)
+    Route::post('/register', [AuthController::class, 'register'])->name('api.register');
+    Route::post('/login', [AuthController::class, 'login'])->name('api.login');
+    
+    // Protected routes (require authentication)
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::post('/logout', [AuthController::class, 'logout'])->name('api.logout');
+        Route::get('/me', [AuthController::class, 'me'])->name('api.me');
+    });
+});
+
 Route::get('/', function (Request $request) {
     $date = $request->get('date', now()->format('Y-m-d'));
     
