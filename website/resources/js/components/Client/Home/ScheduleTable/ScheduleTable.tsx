@@ -1,5 +1,5 @@
 import { TIME_SLOT_HEIGHT } from '@/lib/constants';
-import { getDuration } from '@/lib/utils';
+import { getDuration, randomizeColorBackground } from '@/lib/utils';
 import type { Booking, Room, ScheduleRow } from '@/types/admin';
 import { usePage } from '@inertiajs/react';
 import React, { useEffect, useState } from 'react';
@@ -72,7 +72,7 @@ export default function ScheduleTable({ isSidebarOpen, rooms, schedule, selected
                         course: courseName,
                         start: formatTime(row.time_slot.start_time),
                         end: formatTime(row.time_slot.end_time),
-                        color: slot.booking.keperluan === 'kelas' ? 'bg-red-500' : 'bg-lime-400',
+                        color: randomizeColorBackground(),
                         booking: slot.booking,
                     });
                 }
