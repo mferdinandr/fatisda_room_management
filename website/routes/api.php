@@ -173,9 +173,12 @@ Route::prefix('v1')->group(function () {
     Route::get('rooms-public/{room}', [App\Http\Controllers\Api\V1\RoomController::class, 'show']);
     Route::get('rooms-public/{room}/availability', [App\Http\Controllers\Api\V1\RoomController::class, 'availability'])->name('rooms.public.availability');
 
+    // Public time slot routes 
+    Route::get('time-slots-public', [App\Http\Controllers\Api\V1\TimeSlotController::class, 'index']);
+    Route::get('time-slots-public/{timeSlot}', [App\Http\Controllers\Api\V1\TimeSlotController::class, 'show']);
+    Route::get('time-slots-availability', [App\Http\Controllers\Api\V1\TimeSlotController::class, 'availability']);
+
     Route::middleware('auth:sanctum')->group(function () {
-        
-        
         // Admin routes for rooms
         Route::middleware('admin')->group(function () {
             Route::get('rooms', [App\Http\Controllers\Api\V1\RoomController::class, 'index']);
@@ -184,6 +187,12 @@ Route::prefix('v1')->group(function () {
             Route::put('rooms/{room}', [App\Http\Controllers\Api\V1\RoomController::class, 'update']);
             Route::delete('rooms/{room}', [App\Http\Controllers\Api\V1\RoomController::class, 'destroy']);
             Route::get('rooms/{room}/availability', [App\Http\Controllers\Api\V1\RoomController::class, 'availability'])->name('rooms.availability');
+
+            Route::get('time-slots', [App\Http\Controllers\Api\V1\TimeSlotController::class, 'index']);
+            Route::post('time-slots', [App\Http\Controllers\Api\V1\TimeSlotController::class, 'store']);
+            Route::get('time-slots/{timeSlot}', [App\Http\Controllers\Api\V1\TimeSlotController::class, 'show']);
+            Route::put('time-slots/{timeSlot}', [App\Http\Controllers\Api\V1\TimeSlotController::class, 'update']);
+            Route::delete('time-slots/{timeSlot}', [App\Http\Controllers\Api\V1\TimeSlotController::class, 'destroy']);
         });
     });
 });
