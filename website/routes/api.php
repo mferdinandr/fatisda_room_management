@@ -178,7 +178,19 @@ Route::prefix('v1')->group(function () {
     Route::get('time-slots-public/{timeSlot}', [App\Http\Controllers\Api\V1\TimeSlotController::class, 'show']);
     Route::get('time-slots-availability', [App\Http\Controllers\Api\V1\TimeSlotController::class, 'availability']);
 
+    Route::get('public-schedule', [App\Http\Controllers\Api\V1\BookingController::class, 'publicSchedule']);
+    Route::get('public-schedule-matrix', [App\Http\Controllers\Api\V1\BookingController::class, 'publicScheduleMatrix']);
+
     Route::middleware('auth:sanctum')->group(function () {
+
+        // User Booking Routes
+        Route::get('booking/check-availability', [App\Http\Controllers\Api\V1\BookingController::class, 'checkAvailability']);
+        Route::post('bookings', [App\Http\Controllers\Api\V1\BookingController::class, 'store']);
+        Route::get('my-bookings', [App\Http\Controllers\Api\V1\BookingController::class, 'myBookings']);
+        Route::get('my-bookings/{booking}', [App\Http\Controllers\Api\V1\BookingController::class, 'show']);
+        Route::put('my-bookings/{booking}', [App\Http\Controllers\Api\V1\BookingController::class, 'update']);
+        Route::delete('my-bookings/{booking}', [App\Http\Controllers\Api\V1\BookingController::class, 'destroy']);
+        
         // Admin routes for rooms
         Route::middleware('admin')->group(function () {
             Route::get('rooms', [App\Http\Controllers\Api\V1\RoomController::class, 'index']);
@@ -193,6 +205,14 @@ Route::prefix('v1')->group(function () {
             Route::get('time-slots/{timeSlot}', [App\Http\Controllers\Api\V1\TimeSlotController::class, 'show']);
             Route::put('time-slots/{timeSlot}', [App\Http\Controllers\Api\V1\TimeSlotController::class, 'update']);
             Route::delete('time-slots/{timeSlot}', [App\Http\Controllers\Api\V1\TimeSlotController::class, 'destroy']);
+
+            Route::get('bookings', [App\Http\Controllers\Api\V1\BookingController::class, 'index']);
+            Route::get('bookings/{booking}', [App\Http\Controllers\Api\V1\BookingController::class, 'show']);
+            Route::post('bookings/{booking}/approve', [App\Http\Controllers\Api\V1\BookingController::class, 'approve']);
+            Route::post('bookings/{booking}/reject', [App\Http\Controllers\Api\V1\BookingController::class, 'reject']);
+            Route::post('bookings/bulk-approve', [App\Http\Controllers\Api\V1\BookingController::class, 'bulkApprove']);
+            Route::post('bookings/bulk-reject', [App\Http\Controllers\Api\V1\BookingController::class, 'bulkReject']);
+            Route::delete('bookings/{booking}', [App\Http\Controllers\Api\V1\BookingController::class, 'destroy']);
         });
     });
 });
