@@ -21,17 +21,13 @@ const Sidebar = ({ isOpen, setIsOpen, selectedDate, canGoToPrevious = true }: IS
         if (!newDate) return;
 
         // Check if it's a past date and if we can't go to previous
-        const today = new Date();
-        const isPastDate = newDate < today && newDate.toDateString() !== today.toDateString();
-
-        if (isPastDate && !canGoToPrevious) {
-            return;
-        }
 
         setDate(newDate);
 
-        // Format date for URL
-        const formattedDate = newDate.toISOString().split('T')[0];
+        const year = newDate.getFullYear();
+        const month = String(newDate.getMonth() + 1).padStart(2, '0');
+        const day = String(newDate.getDate()).padStart(2, '0');
+        const formattedDate = `${year}-${month}-${day}`;
 
         // Navigate to new date
         router.get(
