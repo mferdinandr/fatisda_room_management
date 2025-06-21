@@ -5,7 +5,6 @@ import Profile from './Profile';
 const Navbar = () => {
     const { auth } = usePage<SharedData>().props;
 
-    console.log('asdasdad', auth.user);
     return (
         <header className="from-secondary/20 to-background/30 fixed top-0 z-50 mb-6 w-full bg-linear-to-t px-6 pt-6 text-sm">
             <nav className="bg-background flex w-full items-center justify-between gap-4 rounded-2xl px-6 py-2">

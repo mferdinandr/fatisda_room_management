@@ -48,6 +48,7 @@ export interface Booking {
     // Relations
     user?: User;
     room?: Room;
+    color?: string;
     time_slot?: TimeSlot;
 }
 

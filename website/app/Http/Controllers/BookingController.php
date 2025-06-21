@@ -56,6 +56,7 @@ class BookingController extends Controller
             'mata_kuliah' => 'required_if:keperluan,kelas|nullable|string|max:100',
             'dosen' => 'nullable|string|max:100',
             'catatan' => 'required_if:keperluan,lainnya|nullable|string|max:500',
+            'color' => $this->generateRandomColor(),
         ]);
 
         // Double-check availability
