@@ -94,6 +94,7 @@ class BookingController extends Controller
             'dosen' => $request->dosen,
             'catatan' => $request->catatan,
             'status' => 'pending',
+            'color' => $this->generateRandomColor(),
         ]);
 
         return redirect()->route('bookings.my-bookings')
@@ -193,4 +194,23 @@ class BookingController extends Controller
         return redirect()->route('bookings.my-bookings')
             ->with('success', 'Booking cancelled successfully!');
     }
+
+    private function generateRandomColor()
+    {
+        $colors = [
+            '#3B82F6', // Blue
+            '#EF4444', // Red  
+            '#10B981', // Green
+            '#F59E0B', // Yellow
+            '#8B5CF6', // Purple
+            '#F97316', // Orange
+            '#06B6D4', // Cyan
+            '#84CC16', // Lime
+            '#EC4899', // Pink
+            '#6366F1', // Indigo
+        ];
+        
+        return $colors[array_rand($colors)];
+    }
 }
+

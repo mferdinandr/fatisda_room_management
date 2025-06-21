@@ -1,5 +1,3 @@
-// resources/js/Pages/Home/index.tsx
-
 import ScheduleTable from '@/components/Client/Home/ScheduleTable/ScheduleTable';
 import Navbar from '@/components/Client/Navbar/Navbar';
 import Sidebar from '@/components/Client/Sidebar/Sidebar';
