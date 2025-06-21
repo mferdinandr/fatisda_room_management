@@ -153,7 +153,7 @@ export default function ScheduleTable({ isSidebarOpen, rooms, schedule, selected
                     <div
                         className={`grid min-w-full text-sm`}
                         style={{
-                            gridTemplateColumns: `${isMobile ? '80px' : '100px'} repeat(${roomNames.length}, minmax(${isMobile ? '110px' : '150px'}, 1fr))`,
+                            gridTemplateColumns: `${isMobile ? '80px' : '70px'} repeat(${roomNames.length}, minmax(${isMobile ? '110px' : '120px'}, 1fr))`,
                         }}
                     >
                         {/* Header */}

@@ -190,7 +190,7 @@ export default function CreateBooking({ room, timeSlot, date, isSlotAvailable = 
                                                 <SelectTrigger className={errors.room_id ? 'border-red-500' : ''}>
                                                     <SelectValue placeholder="Select a room" />
                                                 </SelectTrigger>
-                                                <SelectContent>
+                                                <SelectContent className="bg-on-background">
                                                     {allRooms.map((room) => (
                                                         <SelectItem key={room.id} value={room.id.toString()}>
                                                             {room.name} (Capacity: {room.capacity})
@@ -208,7 +208,7 @@ export default function CreateBooking({ room, timeSlot, date, isSlotAvailable = 
                                                 <SelectTrigger className={errors.time_slot_id ? 'border-red-500' : ''}>
                                                     <SelectValue placeholder="Select a time slot" />
                                                 </SelectTrigger>
-                                                <SelectContent>
+                                                <SelectContent className="bg-on-background">
                                                     {allTimeSlots.map((timeSlot) => (
                                                         <SelectItem key={timeSlot.id} value={timeSlot.id.toString()}>
                                                             {timeSlot.label}
@@ -237,15 +237,21 @@ export default function CreateBooking({ room, timeSlot, date, isSlotAvailable = 
                                             >
                                                 <div className="flex items-center space-x-2">
                                                     <RadioGroupItem value="kelas" id="kelas" />
-                                                    <Label htmlFor="kelas">Class (Kelas)</Label>
+                                                    <Label htmlFor="kelas" className="cursor-pointer">
+                                                        Class (Kelas)
+                                                    </Label>
                                                 </div>
                                                 <div className="flex items-center space-x-2">
                                                     <RadioGroupItem value="rapat" id="rapat" />
-                                                    <Label htmlFor="rapat">Meeting (Rapat)</Label>
+                                                    <Label htmlFor="rapat" className="cursor-pointer">
+                                                        Meeting (Rapat)
+                                                    </Label>
                                                 </div>
                                                 <div className="flex items-center space-x-2">
                                                     <RadioGroupItem value="lainnya" id="lainnya" />
-                                                    <Label htmlFor="lainnya">Others (Lainnya)</Label>
+                                                    <Label htmlFor="lainnya" className="cursor-pointer">
+                                                        Others (Lainnya)
+                                                    </Label>
                                                 </div>
                                             </RadioGroup>
                                             {errors.keperluan && <p className="text-sm text-red-600">{errors.keperluan}</p>}
