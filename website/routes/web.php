@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Inertia\Inertia;
 
-
 Route::get('/', function (Request $request) {
     $date = $request->get('date', now()->format('Y-m-d'));
     
@@ -83,6 +82,7 @@ Route::get('/api/availability', [ScheduleController::class, 'checkAvailability']
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/booking/create', [BookingController::class, 'create'])->name('bookings.create');
     Route::post('/booking', [BookingController::class, 'store'])->name('bookings.store');
+    Route::get('/booking/check-availability', [BookingController::class, 'checkAvailability'])->name('bookings.check-availability');
     Route::get('/my-bookings', [BookingController::class, 'myBookings'])->name('bookings.my-bookings');
     Route::get('/my-bookings/{booking}', [BookingController::class, 'show'])->name('bookings.show');
     Route::get('/my-bookings/{booking}/edit', [BookingController::class, 'edit'])->name('bookings.edit');

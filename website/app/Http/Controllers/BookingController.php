@@ -15,31 +15,72 @@ class BookingController extends Controller
      */
     public function create(Request $request)
     {
+        // Validate optional parameters
+        $request->validate([
+            'room_id' => 'nullable|exists:rooms,id',
+            'time_slot_id' => 'nullable|exists:time_slots,id',
+            'date' => 'nullable|date|after_or_equal:today',
+        ]);
+
+        $room = null;
+        $timeSlot = null;
+        $date = $request->get('date', now()->format('Y-m-d'));
+
+        // If specific room and time slot are provided, get them
+        if ($request->room_id) {
+            $room = Room::findOrFail($request->room_id);
+        }
+        
+        if ($request->time_slot_id) {
+            $timeSlot = TimeSlot::findOrFail($request->time_slot_id);
+        }
+
+        // If both room and time slot are provided, check availability
+        $isSlotAvailable = true;
+        if ($room && $timeSlot) {
+            $existingBooking = Booking::where('room_id', $room->id)
+                ->where('time_slot_id', $timeSlot->id)
+                ->where('booking_date', $date)
+                ->where('status', 'approved')
+                ->exists();
+            
+            $isSlotAvailable = !$existingBooking;
+        }
+
+        // Get all rooms and time slots for the dropdowns
+        $allRooms = Room::active()->orderBy('name')->get();
+        $allTimeSlots = TimeSlot::active()->ordered()->get();
+
+        return Inertia::render('Booking/Create', [
+            'room' => $room,
+            'timeSlot' => $timeSlot,
+            'date' => $date,
+            'isSlotAvailable' => $isSlotAvailable,
+            'allRooms' => $allRooms,
+            'allTimeSlots' => $allTimeSlots,
+        ]);
+    }
+
+    /**
+     * Check availability for a specific slot
+     */
+    public function checkAvailability(Request $request)
+    {
         $request->validate([
             'room_id' => 'required|exists:rooms,id',
             'time_slot_id' => 'required|exists:time_slots,id',
             'date' => 'required|date|after_or_equal:today',
         ]);
 
-        // Check if slot is still available
         $existingBooking = Booking::where('room_id', $request->room_id)
             ->where('time_slot_id', $request->time_slot_id)
             ->where('booking_date', $request->date)
             ->where('status', 'approved')
             ->exists();
 
-        if ($existingBooking) {
-            return redirect()->route('schedule.index', ['date' => $request->date])
-                ->with('error', 'This time slot is no longer available.');
-        }
-
-        $room = Room::findOrFail($request->room_id);
-        $timeSlot = TimeSlot::findOrFail($request->time_slot_id);
-
-        return Inertia::render('Booking/Create', [
-            'room' => $room,
-            'timeSlot' => $timeSlot,
-            'date' => $request->date,
+        return response()->json([
+            'available' => !$existingBooking,
+            'message' => $existingBooking ? 'This time slot is not available' : 'This time slot is available'
         ]);
     }
 
@@ -56,7 +97,6 @@ class BookingController extends Controller
             'mata_kuliah' => 'required_if:keperluan,kelas|nullable|string|max:100',
             'dosen' => 'nullable|string|max:100',
             'catatan' => 'required_if:keperluan,lainnya|nullable|string|max:500',
-            'color' => $this->generateRandomColor(),
         ]);
 
         // Double-check availability
@@ -214,4 +254,3 @@ class BookingController extends Controller
         return $colors[array_rand($colors)];
     }
 }
-
