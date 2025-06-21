@@ -1,25 +1,34 @@
-// resources/js/Pages/Booking/Create.tsx
-
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-grup';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import type { Room, TimeSlot } from '@/types/admin';
 import { Head, Link, useForm } from '@inertiajs/react';
-import { ArrowLeft, Building2, Calendar, Clock, Save } from 'lucide-react';
+import { ArrowLeft, Building2, Calendar, CheckCircle, Clock, Save, XCircle } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 interface Props {
-    room: Room;
-    timeSlot: TimeSlot;
+    room?: Room;
+    timeSlot?: TimeSlot;
     date: string;
+    isSlotAvailable?: boolean;
+    allRooms: Room[];
+    allTimeSlots: TimeSlot[];
 }
 
-export default function CreateBooking({ room, timeSlot, date }: Props) {
+interface AvailabilityStatus {
+    available: boolean;
+    message: string;
+    loading: boolean;
+}
+
+export default function CreateBooking({ room, timeSlot, date, isSlotAvailable = true, allRooms, allTimeSlots }: Props) {
     const { data, setData, post, processing, errors } = useForm({
-        room_id: room.id,
-        time_slot_id: timeSlot.id,
+        room_id: room?.id || '',
+        time_slot_id: timeSlot?.id || '',
         booking_date: date,
         keperluan: 'kelas' as 'kelas' | 'rapat' | 'lainnya',
         mata_kuliah: '',
@@ -27,8 +36,56 @@ export default function CreateBooking({ room, timeSlot, date }: Props) {
         catatan: '',
     });
 
+    const [availability, setAvailability] = useState<AvailabilityStatus>({
+        available: isSlotAvailable,
+        message: isSlotAvailable ? 'This time slot is available' : 'This time slot is not available',
+        loading: false,
+    });
+
+    // Check availability when room, time slot, or date changes
+    useEffect(() => {
+        const checkAvailability = async () => {
+            if (!data.room_id || !data.time_slot_id || !data.booking_date) {
+                setAvailability({
+                    available: false,
+                    message: 'Please select room, time slot, and date',
+                    loading: false,
+                });
+                return;
+            }
+
+            setAvailability((prev) => ({ ...prev, loading: true }));
+
+            try {
+                const response = await fetch(
+                    `/booking/check-availability?room_id=${data.room_id}&time_slot_id=${data.time_slot_id}&date=${data.booking_date}`,
+                );
+                const result = await response.json();
+
+                setAvailability({
+                    available: result.available,
+                    message: result.message,
+                    loading: false,
+                });
+            } catch (error) {
+                setAvailability({
+                    available: false,
+                    message: 'Error checking availability',
+                    loading: false,
+                });
+            }
+        };
+
+        // Debounce the availability check
+        const timeoutId = setTimeout(checkAvailability, 300);
+        return () => clearTimeout(timeoutId);
+    }, [data.room_id, data.time_slot_id, data.booking_date]);
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        if (!availability.available) {
+            return;
+        }
         post('/booking');
     };
 
@@ -39,6 +96,27 @@ export default function CreateBooking({ room, timeSlot, date }: Props) {
             month: 'long',
             day: 'numeric',
         });
+    };
+
+    const selectedRoom = allRooms.find((r) => r.id.toString() === data.room_id.toString());
+    const selectedTimeSlot = allTimeSlots.find((ts) => ts.id.toString() === data.time_slot_id.toString());
+
+    const AvailabilityIndicator = () => {
+        if (availability.loading) {
+            return (
+                <div className="flex items-center space-x-2 text-blue-600">
+                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-blue-600 border-t-transparent" />
+                    <span className="text-sm">Checking availability...</span>
+                </div>
+            );
+        }
+
+        return (
+            <div className={`flex items-center space-x-2 ${availability.available ? 'text-green-600' : 'text-red-600'}`}>
+                {availability.available ? <CheckCircle className="h-5 w-5" /> : <XCircle className="h-5 w-5" />}
+                <span className="text-sm font-medium">{availability.message}</span>
+            </div>
+        );
     };
 
     return (
@@ -91,6 +169,64 @@ export default function CreateBooking({ room, timeSlot, date }: Props) {
                                 </CardHeader>
                                 <CardContent>
                                     <form onSubmit={handleSubmit} className="space-y-6">
+                                        {/* Date Selection */}
+                                        <div className="space-y-2">
+                                            <Label htmlFor="booking_date">Date *</Label>
+                                            <Input
+                                                id="booking_date"
+                                                type="date"
+                                                value={data.booking_date}
+                                                onChange={(e) => setData('booking_date', e.target.value)}
+                                                min={new Date().toISOString().split('T')[0]}
+                                                className={errors.booking_date ? 'border-red-500' : ''}
+                                            />
+                                            {errors.booking_date && <p className="text-sm text-red-600">{errors.booking_date}</p>}
+                                        </div>
+
+                                        {/* Room Selection */}
+                                        <div className="space-y-2">
+                                            <Label htmlFor="room_id">Room *</Label>
+                                            <Select value={data.room_id.toString()} onValueChange={(value) => setData('room_id', value)}>
+                                                <SelectTrigger className={errors.room_id ? 'border-red-500' : ''}>
+                                                    <SelectValue placeholder="Select a room" />
+                                                </SelectTrigger>
+                                                <SelectContent className="bg-on-background">
+                                                    {allRooms.map((room) => (
+                                                        <SelectItem key={room.id} value={room.id.toString()}>
+                                                            {room.name} (Capacity: {room.capacity})
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                            {errors.room_id && <p className="text-sm text-red-600">{errors.room_id}</p>}
+                                        </div>
+
+                                        {/* Time Slot Selection */}
+                                        <div className="space-y-2">
+                                            <Label htmlFor="time_slot_id">Time Slot *</Label>
+                                            <Select value={data.time_slot_id.toString()} onValueChange={(value) => setData('time_slot_id', value)}>
+                                                <SelectTrigger className={errors.time_slot_id ? 'border-red-500' : ''}>
+                                                    <SelectValue placeholder="Select a time slot" />
+                                                </SelectTrigger>
+                                                <SelectContent className="bg-on-background">
+                                                    {allTimeSlots.map((timeSlot) => (
+                                                        <SelectItem key={timeSlot.id} value={timeSlot.id.toString()}>
+                                                            {timeSlot.label}
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                            {errors.time_slot_id && <p className="text-sm text-red-600">{errors.time_slot_id}</p>}
+                                        </div>
+
+                                        {/* Availability Status */}
+                                        <div className="rounded-lg border p-4">
+                                            <Label className="text-base font-medium">Availability Status</Label>
+                                            <div className="mt-2">
+                                                <AvailabilityIndicator />
+                                            </div>
+                                        </div>
+
                                         {/* Purpose */}
                                         <div className="space-y-3">
                                             <Label className="text-base font-medium">Purpose *</Label>
@@ -101,15 +237,21 @@ export default function CreateBooking({ room, timeSlot, date }: Props) {
                                             >
                                                 <div className="flex items-center space-x-2">
                                                     <RadioGroupItem value="kelas" id="kelas" />
-                                                    <Label htmlFor="kelas">Class (Kelas)</Label>
+                                                    <Label htmlFor="kelas" className="cursor-pointer">
+                                                        Class (Kelas)
+                                                    </Label>
                                                 </div>
                                                 <div className="flex items-center space-x-2">
                                                     <RadioGroupItem value="rapat" id="rapat" />
-                                                    <Label htmlFor="rapat">Meeting (Rapat)</Label>
+                                                    <Label htmlFor="rapat" className="cursor-pointer">
+                                                        Meeting (Rapat)
+                                                    </Label>
                                                 </div>
                                                 <div className="flex items-center space-x-2">
                                                     <RadioGroupItem value="lainnya" id="lainnya" />
-                                                    <Label htmlFor="lainnya">Others (Lainnya)</Label>
+                                                    <Label htmlFor="lainnya" className="cursor-pointer">
+                                                        Others (Lainnya)
+                                                    </Label>
                                                 </div>
                                             </RadioGroup>
                                             {errors.keperluan && <p className="text-sm text-red-600">{errors.keperluan}</p>}
@@ -163,7 +305,12 @@ export default function CreateBooking({ room, timeSlot, date }: Props) {
 
                                         {/* Form Actions */}
                                         <div className="flex flex-col gap-4 pt-4 sm:flex-row">
-                                            <Button type="submit" variant={'secondary'} disabled={processing} className="flex-1">
+                                            <Button
+                                                type="submit"
+                                                variant={'secondary'}
+                                                disabled={processing || !availability.available || availability.loading}
+                                                className="flex-1"
+                                            >
                                                 {processing ? (
                                                     <>
                                                         <div className="border-background mr-2 h-4 w-4 animate-spin rounded-full border-2 border-t-transparent" />
@@ -178,7 +325,7 @@ export default function CreateBooking({ room, timeSlot, date }: Props) {
                                             </Button>
 
                                             <Button asChild variant="outline" className="flex-1">
-                                                <Link href={`/?date=${date}`}>Cancel</Link>
+                                                <Link href={`/?date=${data.booking_date}`}>Cancel</Link>
                                             </Button>
                                         </div>
 
@@ -210,9 +357,15 @@ export default function CreateBooking({ room, timeSlot, date }: Props) {
                                             <Building2 className="mr-2 h-5 w-5 text-blue-600" />
                                             <span className="font-semibold text-blue-900">Room</span>
                                         </div>
-                                        <p className="font-medium text-blue-800">{room.name}</p>
-                                        <p className="text-sm text-blue-600">Capacity: {room.capacity} people</p>
-                                        {room.facilities && <p className="mt-1 text-sm text-blue-600">{room.facilities}</p>}
+                                        {selectedRoom ? (
+                                            <>
+                                                <p className="font-medium text-blue-800">{selectedRoom.name}</p>
+                                                <p className="text-sm text-blue-600">Capacity: {selectedRoom.capacity} people</p>
+                                                {selectedRoom.facilities && <p className="mt-1 text-sm text-blue-600">{selectedRoom.facilities}</p>}
+                                            </>
+                                        ) : (
+                                            <p className="text-sm text-blue-600">Please select a room</p>
+                                        )}
                                     </div>
 
                                     <div className="rounded-lg bg-green-50 p-4">
@@ -220,7 +373,11 @@ export default function CreateBooking({ room, timeSlot, date }: Props) {
                                             <Clock className="mr-2 h-5 w-5 text-green-600" />
                                             <span className="font-semibold text-green-900">Time</span>
                                         </div>
-                                        <p className="font-medium text-green-800">{timeSlot.label}</p>
+                                        {selectedTimeSlot ? (
+                                            <p className="font-medium text-green-800">{selectedTimeSlot.label}</p>
+                                        ) : (
+                                            <p className="text-sm text-green-600">Please select a time slot</p>
+                                        )}
                                     </div>
 
                                     <div className="rounded-lg bg-purple-50 p-4">
@@ -228,7 +385,7 @@ export default function CreateBooking({ room, timeSlot, date }: Props) {
                                             <Calendar className="mr-2 h-5 w-5 text-purple-600" />
                                             <span className="font-semibold text-purple-900">Date</span>
                                         </div>
-                                        <p className="font-medium text-purple-800">{formatDate(date)}</p>
+                                        <p className="font-medium text-purple-800">{formatDate(data.booking_date)}</p>
                                     </div>
 
                                     <div className="mt-6 rounded-lg border border-yellow-200 bg-yellow-50 p-4">
@@ -237,6 +394,7 @@ export default function CreateBooking({ room, timeSlot, date }: Props) {
                                             <li>• Your booking requires admin approval</li>
                                             <li>• You'll receive notification once approved</li>
                                             <li>• Bookings can be edited until approved</li>
+                                            <li>• Check availability before submitting</li>
                                         </ul>
                                     </div>
                                 </CardContent>
