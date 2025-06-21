@@ -24,7 +24,7 @@ export default function Welcome({ date, selectedDate, rooms, schedule }: Props) 
                 <link rel="preconnect" href="https://fonts.bunny.net" />
                 <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
             </Head>
-            <div className="to-secondary flex min-h-screen w-full flex-col items-center bg-linear-to-br from-white px-3 py-4 text-[#1b1b18] md:px-8 lg:justify-center">
+            <div className="to-secondary w- flex min-h-screen flex-col items-center bg-linear-to-br from-white px-3 py-4 text-[#1b1b18] md:px-8 lg:justify-center">
                 <Navbar />
                 <div className="flex h-full w-full overflow-x-auto opacity-100 transition-opacity duration-750 lg:grow starting:opacity-0">
                     {/* Main Content Container */}
@@ -35,7 +35,10 @@ export default function Welcome({ date, selectedDate, rooms, schedule }: Props) 
                         </div>
                     </div>
                 </div>
-                <div className="fixed right-6 bottom-6 z-50">
+                <div className="fixed right-6 bottom-6 z-50 flex flex-col items-end">
+                    <div className="bg-on-background mb-3 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full border border-black text-xl hover:bg-white/50">
+                        ?
+                    </div>
                     <Button asChild variant={'secondary'} size="lg" className="rounded-full shadow-lg transition-all duration-200 hover:shadow-xl">
                         <Link href={`/booking/create?date=${date}`}>
                             <Plus className="mr-2 h-5 w-5" />

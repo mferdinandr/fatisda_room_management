@@ -1,3 +1,4 @@
+import Navbar from '@/components/Client/Navbar/Navbar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -96,32 +97,9 @@ export default function ShowBooking({ booking }: Props) {
 
             <div className="min-h-screen bg-gray-50 font-sans">
                 {/* Navigation */}
-                <nav className="border-b bg-white shadow-sm">
-                    <div className="mx-auto max-w-7xl px-4">
-                        <div className="flex items-center justify-between py-4">
-                            <Link href="/" className="flex items-center space-x-2">
-                                <Building2 className="h-6 w-6 text-blue-600" />
-                                <span className="text-xl font-bold text-gray-900">FATISDA Room</span>
-                            </Link>
+                <Navbar />
 
-                            <div className="flex items-center space-x-4">
-                                <Button asChild variant="outline" size="sm">
-                                    <Link href="/my-bookings">
-                                        <ArrowLeft className="mr-2 h-4 w-4" />
-                                        Back to My Bookings
-                                    </Link>
-                                </Button>
-                                <Button asChild variant="outline" size="sm">
-                                    <Link href="/logout" method="post">
-                                        Logout
-                                    </Link>
-                                </Button>
-                            </div>
-                        </div>
-                    </div>
-                </nav>
-
-                <div className="mx-auto max-w-4xl px-4 py-8">
+                <div className="mx-auto max-w-4xl px-4 py-8 pt-32">
                     {/* Header */}
                     <div className="mb-8">
                         <div className="flex items-center justify-between">

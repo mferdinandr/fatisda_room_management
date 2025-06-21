@@ -1,3 +1,4 @@
+import Navbar from '@/components/Client/Navbar/Navbar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -6,7 +7,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-grup';
 import { Textarea } from '@/components/ui/textarea';
 import type { Booking } from '@/types/admin';
 import { Head, Link, useForm } from '@inertiajs/react';
-import { AlertTriangle, ArrowLeft, Building2, Calendar, Clock, Save } from 'lucide-react';
+import { AlertTriangle, Building2, Calendar, Clock, Save } from 'lucide-react';
 
 interface Props {
     booking: Booking;
@@ -50,35 +51,9 @@ export default function EditBooking({ booking }: Props) {
 
             <div className="min-h-screen bg-gray-50 font-sans">
                 {/* Navigation */}
-                <nav className="border-b bg-white shadow-sm">
-                    <div className="mx-auto max-w-7xl px-4">
-                        <div className="flex items-center justify-between py-4">
-                            <Link href="/" className="flex items-center space-x-2">
-                                <Building2 className="h-6 w-6 text-blue-600" />
-                                <span className="text-xl font-bold text-gray-900">FATISDA Room</span>
-                            </Link>
+                <Navbar />
 
-                            <div className="flex items-center space-x-4">
-                                <Button asChild variant="outline" size="sm">
-                                    <Link href={`/my-bookings/${booking.id}`}>
-                                        <ArrowLeft className="mr-2 h-4 w-4" />
-                                        Back to Details
-                                    </Link>
-                                </Button>
-                                <Button asChild variant="outline" size="sm">
-                                    <Link href="/my-bookings">My Bookings</Link>
-                                </Button>
-                                <Button asChild variant="outline" size="sm">
-                                    <Link href="/logout" method="post">
-                                        Logout
-                                    </Link>
-                                </Button>
-                            </div>
-                        </div>
-                    </div>
-                </nav>
-
-                <div className="mx-auto max-w-3xl px-4 py-8">
+                <div className="mx-auto max-w-3xl px-4 py-8 pt-32">
                     <div className="mb-8">
                         <h1 className="mb-2 text-3xl font-bold text-gray-900">Edit Booking</h1>
                         <p className="text-gray-600">Update your booking details below</p>
