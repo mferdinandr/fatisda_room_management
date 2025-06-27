@@ -8,7 +8,7 @@ interface AdminNavbarProps {
 
 export default function AdminNavbar({ userName = 'Admin' }: AdminNavbarProps) {
     return (
-        <nav className="bg-background text-on-background text-primary-foreground fixed right-0 left-0 shadow-lg">
+        <nav className="bg-background text-on-background text-primary-foreground fixed right-0 left-0 z-50 shadow-lg">
             <div className="flex flex-col justify-between px-10">
                 <div className="flex items-center justify-between py-4">
                     <div className="flex items-center space-x-4">

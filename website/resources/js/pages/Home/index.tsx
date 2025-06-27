@@ -36,9 +36,6 @@ export default function Welcome({ date, selectedDate, rooms, schedule }: Props) 
                     </div>
                 </div>
                 <div className="fixed right-6 bottom-6 z-50 flex flex-col items-end">
-                    <div className="bg-on-background mb-3 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full border border-black text-xl hover:bg-white/50">
-                        ?
-                    </div>
                     <Button asChild variant={'secondary'} size="lg" className="rounded-full shadow-lg transition-all duration-200 hover:shadow-xl">
                         <Link href={`/booking/create?date=${date}`}>
                             <Plus className="mr-2 h-5 w-5" />
