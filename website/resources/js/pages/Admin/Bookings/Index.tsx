@@ -49,11 +49,6 @@ export default function BookingsIndex({ bookings, rooms, stats, filters }: Props
         router.get('/admin/bookings');
     };
 
-    const exportBookings = () => {
-        const params = new URLSearchParams(localFilters as any);
-        window.open(`/admin/bookings/export?${params.toString()}`);
-    };
-
     return (
         <AdminLayout title="Manage Bookings" currentRoute="admin.bookings.index">
             <Head title="Manage Bookings" />
@@ -193,6 +188,7 @@ export default function BookingsIndex({ bookings, rooms, stats, filters }: Props
                         <div className="mt-4 flex items-center justify-between">
                             <div className="text-muted-foreground text-sm">
                                 {Object.values(localFilters).some((v) => v) && (
+                                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
                                     <span>Active filters: {Object.entries(localFilters).filter(([_, v]) => v).length}</span>
                                 )}
                             </div>
