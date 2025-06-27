@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Head, router } from '@inertiajs/react';
-import { Calendar, CheckCircle, Clock, Download, FileText, Filter, Search, XCircle } from 'lucide-react';
+import { Calendar, CheckCircle, Clock, FileText, Filter, Search, XCircle } from 'lucide-react';
 import { useState } from 'react';
 
 import BookingTable from '@/components/Admin/Booking/BookingTable';
@@ -65,11 +65,6 @@ export default function BookingsIndex({ bookings, rooms, stats, filters }: Props
                         <h1 className="text-3xl font-bold text-gray-900">Manage Bookings</h1>
                         <p className="mt-2 text-gray-600">Review, approve, and manage room booking requests</p>
                     </div>
-
-                    <Button onClick={exportBookings} variant="outline">
-                        <Download className="mr-2 h-4 w-4" />
-                        Export CSV
-                    </Button>
                 </div>
 
                 {/* Stats */}

@@ -50,6 +50,8 @@ class BookingSeeder extends Seeder
             'mata_kuliah' => 'Kalkulus 2',
             'dosen' => 'Dr. John Smith',
             'status' => 'approved',
+            'color' => Booking::generateRandomColor(),
+            'admin_notes' => 'Booking telah disetujui untuk kelas reguler',
         ]);
 
         if ($room2 && $slot10) {
@@ -62,6 +64,8 @@ class BookingSeeder extends Seeder
                 'mata_kuliah' => 'Kalkulus 2',
                 'dosen' => 'Dr. Jane Doe',
                 'status' => 'approved',
+                'color' => Booking::generateRandomColor(),
+                'admin_notes' => 'Booking disetujui untuk kelas paralel',
             ]);
         }
 
@@ -75,11 +79,15 @@ class BookingSeeder extends Seeder
                 'keperluan' => 'rapat',
                 'dosen' => 'Koordinator Program',
                 'status' => 'approved',
+                'color' => Booking::generateRandomColor(),
+                'admin_notes' => 'Booking untuk rapat rutin koordinator',
             ]);
         }
 
         if ($room4 && $slot15 && $slot16) {
             // Multi-slot booking (15:00-17:00)
+            $color = Booking::generateRandomColor(); // Use same color for connected slots
+            
             Booking::create([
                 'user_id' => $jane->id,
                 'room_id' => $room4->id,
@@ -89,6 +97,8 @@ class BookingSeeder extends Seeder
                 'mata_kuliah' => 'Kalkulus 12',
                 'dosen' => 'Prof. Wilson',
                 'status' => 'approved',
+                'color' => $color,
+                'admin_notes' => 'Booking double slot untuk kelas intensif',
             ]);
 
             Booking::create([
@@ -100,6 +110,8 @@ class BookingSeeder extends Seeder
                 'mata_kuliah' => 'Kalkulus 12',
                 'dosen' => 'Prof. Wilson',
                 'status' => 'approved',
+                'color' => $color,
+                'admin_notes' => 'Booking double slot untuk kelas intensif',
             ]);
         }
 
@@ -114,6 +126,8 @@ class BookingSeeder extends Seeder
                 'mata_kuliah' => 'Algoritma Pemrograman',
                 'dosen' => 'Dr. Alice Brown',
                 'status' => 'approved',
+                'color' => Booking::generateRandomColor(),
+                'admin_notes' => 'Booking untuk kelas praktikum komputer',
             ]);
         }
 
@@ -125,9 +139,61 @@ class BookingSeeder extends Seeder
                 'time_slot_id' => $slot15->id,
                 'booking_date' => $tomorrow,
                 'keperluan' => 'lainnya',
-                'catatan' => 'Seminar mahasiswa tingkat akhir',
                 'dosen' => 'Dr. Sarah Johnson',
                 'status' => 'pending',
+                'color' => Booking::generateRandomColor(),
+                'admin_notes' => null, // Pending booking belum ada catatan admin
+            ]);
+        }
+
+        // Add rejected booking for demo
+        if ($room3 && $slot9) {
+            Booking::create([
+                'user_id' => $john->id,
+                'room_id' => $room3->id,
+                'time_slot_id' => $slot9->id,
+                'booking_date' => $tomorrow,
+                'keperluan' => 'kelas',
+                'mata_kuliah' => 'Struktur Data',
+                'dosen' => 'Dr. Michael Chen',
+                'status' => 'rejected',
+                'color' => Booking::generateRandomColor(),
+                'catatan' => 'Kelas tambahan untuk remedial',
+                'admin_notes' => 'Ditolak karena bentrok dengan jadwal maintenance lab',
+            ]);
+        }
+
+        // Add more varied bookings
+        $nextWeek = Carbon::now()->addWeek()->format('Y-m-d');
+        
+        if ($room1 && $slot9) {
+            Booking::create([
+                'user_id' => $jane->id,
+                'room_id' => $room1->id,
+                'time_slot_id' => $slot9->id,
+                'booking_date' => $nextWeek,
+                'keperluan' => 'lainnya',
+                'mata_kuliah' => 'Ujian Tengah Semester - Kalkulus',
+                'dosen' => 'Tim Dosen Matematika',
+                'status' => 'approved',
+                'color' => Booking::generateRandomColor(),
+                'admin_notes' => 'Booking untuk ujian, perlu persiapan khusus',
+            ]);
+        }
+
+        if ($room4 && $slot10) {
+            Booking::create([
+                'user_id' => $john->id,
+                'room_id' => $room4->id,
+                'time_slot_id' => $slot10->id,
+                'booking_date' => $nextWeek,
+                'keperluan' => 'lainnya',
+                'mata_kuliah' => null,
+                'dosen' => 'Ketua Program Studi',
+                'status' => 'pending',
+                'color' => Booking::generateRandomColor(),
+                'catatan' => 'Acara wisuda tingkat program studi',
+                'admin_notes' => null,
             ]);
         }
     }
