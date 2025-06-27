@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('rooms', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 100); // Nama ruangan seperti "Ruangan 1", "Lab Komputer"
-            $table->integer('capacity')->nullable(); // Kapasitas ruangan
-            $table->text('facilities')->nullable(); // Fasilitas seperti "Proyektor, AC, Whiteboard"
-            $table->boolean('is_active')->default(true); // Apakah ruangan aktif/tidak
+            $table->string('name', 100); 
+            $table->integer('capacity')->nullable(); 
+            $table->text('facilities')->nullable();
+            $table->boolean('is_active')->default(true); 
             $table->timestamps();
         });
     }

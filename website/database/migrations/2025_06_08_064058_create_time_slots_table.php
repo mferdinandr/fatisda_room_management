@@ -13,10 +13,10 @@ return new class extends Migration
     {
          Schema::create('time_slots', function (Blueprint $table) {
             $table->id();
-            $table->time('start_time'); // Jam mulai seperti "09:00:00"
-            $table->time('end_time');   // Jam selesai seperti "10:00:00"
-            $table->string('label', 50); // Label untuk ditampilkan seperti "09:00 - 10:00"
-            $table->boolean('is_active')->default(true); // Apakah time slot aktif
+            $table->time('start_time'); 
+            $table->time('end_time');   
+            $table->string('label', 50);
+            $table->boolean('is_active')->default(true); 
             $table->timestamps();
         });
     }
