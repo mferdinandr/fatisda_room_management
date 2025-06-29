@@ -29,6 +29,8 @@ export interface TimeSlot {
     end_time: string;
     label: string;
     is_active: boolean;
+    updated_at: string;
+    created_at: string;
 }
 
 export interface Booking {

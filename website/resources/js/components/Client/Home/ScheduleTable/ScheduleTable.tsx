@@ -240,7 +240,7 @@ export default function ScheduleTable({ isSidebarOpen, rooms, schedule, selected
             </div>
 
             <Dialog open={isDetailOpen} onOpenChange={setIsDetailOpen}>
-                <DialogContent className="w-full max-w-md font-sans">
+                <DialogContent className="w-full max-w-md cursor-pointer font-sans text-white">
                     <DialogHeader>
                         <div className="flex items-start gap-3">
                             <div className="flex-1">

@@ -219,14 +219,6 @@ export default function ShowTimeSlot({ timeSlot, bookingsCount }: Props) {
                                         Edit This Time Slot
                                     </Link>
                                 </Button>
-
-                                <Button variant="outline" className="w-full cursor-not-allowed justify-start opacity-50" disabled>
-                                    <Calendar className="mr-2 h-4 w-4" />
-                                    View Bookings
-                                    <Badge variant="secondary" className="ml-auto text-xs">
-                                        Soon
-                                    </Badge>
-                                </Button>
                             </CardContent>
                         </Card>
                     </div>

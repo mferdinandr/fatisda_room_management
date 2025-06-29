@@ -101,7 +101,7 @@ export default function MyBookings({ bookings }: Props) {
                                 <Calendar className="text-muted-foreground mx-auto mb-4 h-16 w-16 opacity-50" />
                                 <h3 className="mb-2 text-lg font-semibold">No bookings yet</h3>
                                 <p className="text-muted-foreground mb-6">You haven't made any room booking requests yet.</p>
-                                <Button asChild>
+                                <Button asChild variant={'secondary'}>
                                     <Link href="/">
                                         <Plus className="mr-2 h-4 w-4" />
                                         Make Your First Booking

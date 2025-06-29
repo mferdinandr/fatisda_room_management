@@ -123,6 +123,7 @@ class BookingController extends BaseController
                 'dosen' => $request->dosen,
                 'catatan' => $request->catatan,
                 'status' => 'pending',
+                'color' => $this->generateRandomColor(), // Auto-generate color
             ]);
 
             // Load relationships
@@ -136,6 +137,7 @@ class BookingController extends BaseController
                 'dosen' => $booking->dosen,
                 'catatan' => $booking->catatan,
                 'status' => $booking->status,
+                'color' => $booking->color, // Include color in response
                 'room' => [
                     'id' => $booking->room->id,
                     'name' => $booking->room->name,
@@ -199,6 +201,7 @@ class BookingController extends BaseController
                     'dosen' => $booking->dosen,
                     'catatan' => $booking->catatan,
                     'status' => $booking->status,
+                    'color' => $booking->color, // Include color
                     'admin_notes' => $booking->admin_notes,
                     'room' => [
                         'id' => $booking->room->id,
@@ -243,6 +246,7 @@ class BookingController extends BaseController
                 'dosen' => $booking->dosen,
                 'catatan' => $booking->catatan,
                 'status' => $booking->status,
+                'color' => $booking->color, // Include color
                 'admin_notes' => $booking->admin_notes,
                 'room' => [
                     'id' => $booking->room->id,
@@ -311,6 +315,7 @@ class BookingController extends BaseController
                 'dosen' => $booking->dosen,
                 'catatan' => $booking->catatan,
                 'status' => $booking->status,
+                'color' => $booking->color, // Include color
                 'room' => [
                     'id' => $booking->room->id,
                     'name' => $booking->room->name,
@@ -405,6 +410,7 @@ class BookingController extends BaseController
                     'mata_kuliah' => $booking->mata_kuliah,
                     'dosen' => $booking->dosen,
                     'status' => $booking->status,
+                    'color' => $booking->color, // Include color for public display
                     'user_name' => $booking->user->name, // Only show name, not full user data
                     'room' => [
                         'id' => $booking->room->id,
@@ -502,6 +508,7 @@ class BookingController extends BaseController
                             'keperluan' => $booking->keperluan,
                             'mata_kuliah' => $booking->mata_kuliah,
                             'dosen' => $booking->dosen,
+                            'color' => $booking->color, // Include color for matrix display
                             'user_name' => $booking->user->name,
                         ];
                     }
@@ -606,6 +613,7 @@ class BookingController extends BaseController
                     'dosen' => $booking->dosen,
                     'catatan' => $booking->catatan,
                     'status' => $booking->status,
+                    'color' => $booking->color, // Include color for admin view
                     'admin_notes' => $booking->admin_notes,
                     'user' => [
                         'id' => $booking->user->id,
@@ -820,5 +828,27 @@ class BookingController extends BaseController
         } catch (\Exception $e) {
             return $this->sendError('Failed to bulk reject', ['error' => $e->getMessage()], 500);
         }
+    }
+
+    /**
+     * Generate random color for booking
+     * Same colors as in web controller for consistency
+     */
+    private function generateRandomColor(): string
+    {
+        $colors = [
+            '#3B82F6', // Blue
+            '#EF4444', // Red  
+            '#10B981', // Green
+            '#F59E0B', // Yellow
+            '#8B5CF6', // Purple
+            '#F97316', // Orange
+            '#06B6D4', // Cyan
+            '#84CC16', // Lime
+            '#EC4899', // Pink
+            '#6366F1', // Indigo
+        ];
+        
+        return $colors[array_rand($colors)];
     }
 }
