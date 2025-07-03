@@ -39,6 +39,7 @@ DB_PASSWORD=your_password
 
 ## Database Setup
 ### Option 1: Using migration and seeder
+Aktifkan server menggunakan Laragon, XAMPP, atau sejenisnya
 1. Create your database (via phpMyAdmin or MySql Command)
 ```bash
 CREATE DATABASE fatisda_room_manager
